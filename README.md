@@ -2,6 +2,10 @@
 
 멜론에서 원하는 노래의 가사를 추출 합니다. 
 
+## Dependency
+
+[SwiftSoup](https://github.com/scinfu/SwiftSoup) 2.5.3
+
 ## 주의 
 
 아직 안정화 되지 않은 프로젝트 입니다. 

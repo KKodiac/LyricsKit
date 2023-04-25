@@ -67,7 +67,7 @@ public class LyricsKit: ObservableObject {
     /// - Parameter html: String typed HTML content from query with title and (if available) artist of the song.
     /// - Returns: ID of song given by the parameter. Provided by Melon.
     /// - Throws : Thrown when failed parsing HTML content.
-    func parseQuerySongList(from html: String) -> String? {
+    private func parseQuerySongList(from html: String) -> String? {
         do {
             let document: Document = try SwiftSoup.parse(html)
             let song = try document.select("td").array().first!
@@ -83,7 +83,7 @@ public class LyricsKit: ObservableObject {
     /// - Parameter html: String typed HTML content from query with title and (if available) artist of the song.
     /// - Returns: Lyrics of song given by the parameter. Provided by Melon.
     /// - Throws : Thrown when failed parsing HTML content.
-    func parseQuerySong(from html: String) -> [String]? {
+    private func parseQuerySong(from html: String) -> [String]? {
         do {
             let document: Document = try SwiftSoup.parse(html)
             let lyrics: String = try document.select(".lyric").html()
@@ -103,7 +103,7 @@ public class LyricsKit: ObservableObject {
     /// - Parameter encoding: String encoding for returned content from url.
     /// - Parameter completion: Completion handler for URLSession data task.
     /// - Returns: Completion handler from URLSession data task. Returns `requestError` if invalid response occurs.
-    func request(with urlRequest: URLRequest, encoding: String.Encoding, completion: @escaping (Result<String, Error>) -> Void) {
+    private func request(with urlRequest: URLRequest, encoding: String.Encoding, completion: @escaping (Result<String, Error>) -> Void) {
         URLSession.shared.invalidateAndCancel()
         URLSession.shared.dataTask(with: urlRequest) { data, response, error in
             guard error == nil else {
