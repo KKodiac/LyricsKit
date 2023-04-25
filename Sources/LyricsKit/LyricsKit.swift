@@ -29,9 +29,12 @@ public class LyricsKit: ObservableObject {
         }
         
         // TODO: Improve this Pyramid of Doom
+        // Fuck apple's smart punctuations
         let urlString = String(format: "%@%@%@", Global.base.path, Global.indexPostfix.path, queryString)
+            .replacingOccurrences(of: "’", with: "'")
         guard let url = URL(string: urlString) else { fatalError("URL Error: unable to create query URL") }
-        let urlRequest = URLRequest(url: url)
+        var urlRequest = URLRequest(url: url)
+        urlRequest.setValue("text/html; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request(with: urlRequest, encoding: .utf8) { result in
             switch result {
             case .success(let html):
