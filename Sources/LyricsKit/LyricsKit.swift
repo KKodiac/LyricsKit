@@ -20,7 +20,7 @@ public class LyricsKit: ObservableObject {
     public func fetch(title: String, artist: String? = nil) {
         if let artist = artist {
             let title = title.split(separator: " ").joined(separator: "+")
-            let artist = artist.split(separator: " ").joined(separator: "+")
+            let artist = artist.split(separator: " ").map { $0.replacingOccurrences(of: ",", with: "") }.joined(separator: "+")
             queryString = String(format: "%@+%@", title, artist)
     
         } else {
@@ -32,6 +32,10 @@ public class LyricsKit: ObservableObject {
         // Fuck apple's smart punctuations
         let urlString = String(format: "%@%@%@", Global.base.path, Global.indexPostfix.path, queryString)
             .replacingOccurrences(of: "’", with: "'")
+            .replacingOccurrences(of: "(", with: "")
+            .replacingOccurrences(of: ")", with: "")
+            .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        NSLog("%@", urlString)
         guard let url = URL(string: urlString) else { fatalError("URL Error: unable to create query URL") }
         var urlRequest = URLRequest(url: url)
         urlRequest.setValue("text/html; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -73,7 +77,7 @@ public class LyricsKit: ObservableObject {
     private func parseQuerySongList(from html: String) -> String? {
         do {
             let document: Document = try SwiftSoup.parse(html)
-            let song = try document.select("td").array().first!
+            guard let song = try document.select("td").array().first else { throw ParserError.HTMLParsingError }
             let id = try song.select("input").attr("value")
             return id
         } catch {
